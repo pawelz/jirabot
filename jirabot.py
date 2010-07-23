@@ -58,7 +58,7 @@ def messageHandler(session, uid, type, text, stime, ignore_level):
 	for c in command:
 		mx = command[c][0].search(text)
 		if (mx):
-			ekg.command("/msg %s %s" % (uid, command[c][1](mx)))
+			ekg.command(("/msg %s %s" % (uid, command[c][1](mx))).encode('UTF8'))
 			break
 
 ekg.handler_bind("protocol-message-received", messageHandler)
