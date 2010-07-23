@@ -23,8 +23,7 @@ def login():
 	return jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.config["jirabot:password"])
 
 r = login()
-rx = re.compile("[A-Z]+-[0-9]+")
-rl = re.compile("!list")
+
 rp = r.getProject(ekg.config["jirabot:project"])
 
 def initialize(name, args):
@@ -37,24 +36,30 @@ def print_config(name, args):
 	ekg.echo("JIRA project:  %s" % ekg.config["jirabot:project"])
 	ekg.echo("IRC  channel:  %s" % ekg.config["jirabot:channel"])
 
+def cmd_summary(mx):
+	ekg.echo("Issue: "+mx.group(0))
+	try:
+		i = r.getIssueByKey(mx.group(0))
+		return "%s: %s" % (mx.group(0), i.raw.summary)
+	except jiraError.IssueNotFound:
+		return "%s: Issue not found." % mx.group(0)
+
+def cmd_list(mx):
+	i = rp.getIssues()
+	return " ".join([s.raw.key for s in i])
+
+command={}
+command['summary'] = (re.compile("[A-Z]+-[0-9]+"), cmd_summary)
+command['list'] = (re.compile("!list"), cmd_list)
+
 def messageHandler(session, uid, type, text, stime, ignore_level):
 	r = login()
 
-	mx = rx.search(text)
-	if (mx):
-		ekg.echo("Issue: "+mx.group(0))
-		try:
-			i = r.getIssueByKey(mx.group(0))
-			ekg.command("/msg %s %s: %s" % (uid, mx.group(0), i.raw.summary))
-		except jiraError.IssueNotFound:
-			ekg.command("/msg %s %s: Issue not found." % (uid, mx.group(0)))
-		return
-
-	mx = rl.search(text)
-	if (mx):
-		i = rp.getIssues()
-		ekg.command("/msg %s %s" % (uid, " ".join([s.raw.key for s in i])))
-		return
+	for c in command:
+		mx = command[c][0].search(text)
+		if (mx):
+			ekg.command("/msg %s %s" % (uid, command[c][1](mx)))
+			break
 
 ekg.handler_bind("protocol-message-received", messageHandler)
 
