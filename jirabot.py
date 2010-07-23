@@ -23,7 +23,7 @@ def login():
 	return jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.config["jirabot:password"])
 
 r = login()
-rx = re.compile("%s-[0-9]+" % ekg.config["jirabot:project"])
+rx = re.compile("[A-Z]+-[0-9]+")
 rl = re.compile("!list")
 rp = r.getProject(ekg.config["jirabot:project"])
 
