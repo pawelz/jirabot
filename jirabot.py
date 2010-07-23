@@ -25,7 +25,6 @@ def login():
 r = login()
 rx = re.compile("%s-[0-9]+" % ekg.config["jirabot:project"])
 rl = re.compile("!list")
-rd = re.compile("!display ([A-Z]+-[0-9]+)")
 rp = r.getProject(ekg.config["jirabot:project"])
 
 def initialize(name, args):
@@ -40,14 +39,6 @@ def print_config(name, args):
 
 def messageHandler(session, uid, type, text, stime, ignore_level):
 	r = login()
-
-	mx = rd.search(text)
-	if (mx):
-		i = r.getIssueByKey(mx.group(1))
-		for line in i.display().splitlines():
-			ekg.command("/msg %s %s" % (uid, line))
-			time.sleep(.5)
-		return
 
 	mx = rx.search(text)
 	if (mx):
