@@ -16,6 +16,7 @@ import suds
 
 from pyjira import soap
 from pyjira import jira
+from pyjira import jiraError
 
 def initialize(name, args):
 	r = jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.config["jirabot:password"])
@@ -37,7 +38,7 @@ def messageHandler(session, uid, type, text, stime, ignore_level):
 		try:
 			i = r.getIssueByKey(mx.group(0))
 			ekg.command("/msg %s %s: %s" % (ekg.config["jirabot:channel"], mx.group(0), i.raw.summary))
-		except IssueNotFound:
+		except jiraError.IssueNotFound:
 			ekg.command("/msg %s %s: Issue not found." % (ekg.config["jirabot:channel"], mx.group(0)))
 
 	mx = rl.search(text)
@@ -55,3 +56,5 @@ ekg.variable_add("jirabot:channel", "")
 
 ekg.command_bind("jirabot:initialize", initialize)
 ekg.command_bind("jirabot:print_config", print_config)
+
+initialize(None, None)
