@@ -26,7 +26,11 @@ r = login()
 
 rp = r.getProject(ekg.config["jirabot:project"])
 
+command={}
+
 def initialize(name, args):
+	command['summary'] = (re.compile("%s-[0-9]+" % ekg.config["jirabot:projectregexp"]), cmd_summary)
+	command['list'] = (re.compile("!list"), cmd_list)
 	r = login()
 
 def print_config(name, args):
@@ -34,6 +38,7 @@ def print_config(name, args):
 	ekg.echo("JIRA username: %s" % ekg.config["jirabot:username"])
 	ekg.echo("JIRA password: %s" % ekg.config["jirabot:password"])
 	ekg.echo("JIRA project:  %s" % ekg.config["jirabot:project"])
+	ekg.echo("JIRA projects: %s" % ekg.config["jirabot:projectregexp"])
 	ekg.echo("IRC  channel:  %s" % ekg.config["jirabot:channel"])
 	ekg.echo("Signals dir:   %s" % ekg.config["jirabot:sigdir"])
 
@@ -48,10 +53,6 @@ def cmd_summary(mx):
 def cmd_list(mx):
 	i = rp.getIssues()
 	return " ".join([s.raw.key for s in i])
-
-command={}
-command['summary'] = (re.compile("[A-Z]+-[0-9]+"), cmd_summary)
-command['list'] = (re.compile("!list"), cmd_list)
 
 def handleSignals():
 	dir=ekg.config["jirabot:sigdir"]
@@ -86,6 +87,7 @@ ekg.variable_add("jirabot:password", "")
 ekg.variable_add("jirabot:project", "")
 ekg.variable_add("jirabot:channel", "")
 ekg.variable_add("jirabot:sigdir", "/nonexistent")
+ekg.variable_add("jirabot:projectregexp", "[A-Z]+")
 
 ekg.command_bind("jirabot:initialize", initialize)
 ekg.command_bind("jirabot:print_config", print_config)
