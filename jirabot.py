@@ -35,6 +35,7 @@ def print_config(name, args):
 	ekg.echo("JIRA password: %s" % ekg.config["jirabot:password"])
 	ekg.echo("JIRA project:  %s" % ekg.config["jirabot:project"])
 	ekg.echo("IRC  channel:  %s" % ekg.config["jirabot:channel"])
+	ekg.echo("Signals dir:   %s" % ekg.config["jirabot:sigdir"])
 
 def cmd_summary(mx):
 	ekg.echo("Issue: "+mx.group(0))
@@ -52,6 +53,21 @@ command={}
 command['summary'] = (re.compile("[A-Z]+-[0-9]+"), cmd_summary)
 command['list'] = (re.compile("!list"), cmd_list)
 
+def handleSignals():
+	dir=ekg.config["jirabot:sigdir"]
+	dirList=os.listdir(dir)
+	for fname in dirList:
+		file = open("%s/%s" % (dir, fname), "r")
+		cmd = file.readline()
+		for c in command:
+			mx = command[c][0].search(cmd)
+			if (mx):
+				ekg.command(("/msg %s %s" % (ekg.config["jirabot:channel"], command[c][1](mx))).encode('UTF8'))
+				break
+		file.close()
+		os.unlink("%s/%s" % (dir, fname))
+
+
 def messageHandler(session, uid, type, text, stime, ignore_level):
 	r = login()
 
@@ -62,12 +78,14 @@ def messageHandler(session, uid, type, text, stime, ignore_level):
 			break
 
 ekg.handler_bind("protocol-message-received", messageHandler)
+ekg.timer_bind(5, handleSignals)
 
 ekg.variable_add("jirabot:url", "")
 ekg.variable_add("jirabot:username", "")
 ekg.variable_add("jirabot:password", "")
 ekg.variable_add("jirabot:project", "")
 ekg.variable_add("jirabot:channel", "")
+ekg.variable_add("jirabot:sigdir", "/nonexistent")
 
 ekg.command_bind("jirabot:initialize", initialize)
 ekg.command_bind("jirabot:print_config", print_config)
