@@ -46,7 +46,7 @@ def cmd_summary(mx):
 	ekg.echo("Issue: "+mx.group(0))
 	try:
 		i = r.getIssueByKey(mx.group(0))
-		return "%s: %s" % (mx.group(0), i.raw.summary)
+		return "%s (%s/%s): %s" % (mx.group(0), i.raw.reporter, i.statusName(), i.raw.summary)
 	except jiraError.IssueNotFound:
 		return "%s: Issue not found." % mx.group(0)
 
