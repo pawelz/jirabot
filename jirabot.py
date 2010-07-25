@@ -19,6 +19,7 @@ from pyjira import soap
 from pyjira import jira
 from pyjira import jiraError
 
+r = jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.config["jirabot:password"])
 rp = r.getProject(ekg.config["jirabot:project"])
 
 command={}
