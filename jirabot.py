@@ -19,11 +19,6 @@ from pyjira import soap
 from pyjira import jira
 from pyjira import jiraError
 
-def login():
-	return jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.config["jirabot:password"])
-
-r = login()
-
 rp = r.getProject(ekg.config["jirabot:project"])
 
 command={}
@@ -31,7 +26,6 @@ command={}
 def initialize(name, args):
 	command['summary'] = (re.compile("%s-[0-9]+" % ekg.config["jirabot:projectregexp"]), cmd_summary)
 	command['list'] = (re.compile("!list"), cmd_list)
-	r = login()
 
 def print_config(name, args):
 	ekg.echo("JIRA url:      %s" % ekg.config["jirabot:url"])
@@ -70,8 +64,6 @@ def handleSignals():
 
 
 def messageHandler(session, uid, type, text, stime, ignore_level):
-	r = login()
-
 	for c in command:
 		mx = command[c][0].search(text)
 		if (mx):
