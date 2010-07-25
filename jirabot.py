@@ -83,5 +83,6 @@ ekg.variable_add("jirabot:projectregexp", "[A-Z]+")
 
 ekg.command_bind("jirabot:initialize", initialize)
 ekg.command_bind("jirabot:print_config", print_config)
+ekg.command_bind("jirabot:signal", lambda n, a: messageHandler(None, ekg.config["jirabot:channel"], None, a, None, None))
 
 initialize(None, None)
