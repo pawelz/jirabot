@@ -62,7 +62,6 @@ def handleSignals():
 		file.close()
 		os.unlink("%s/%s" % (dir, fname))
 
-
 def messageHandler(session, uid, type, text, stime, ignore_level):
 	for c in command:
 		mx = command[c][0].search(text)
