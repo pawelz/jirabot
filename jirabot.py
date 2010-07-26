@@ -18,6 +18,7 @@ import time
 from pyjira import soap
 from pyjira import jira
 from pyjira import jiraError
+from termcolor import colored
 
 r = jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.config["jirabot:password"])
 rp = r.getProject(ekg.config["jirabot:project"])
@@ -41,7 +42,7 @@ def cmd_summary(mx):
 	ekg.echo("Issue: "+mx.group(0))
 	try:
 		i = r.getIssueByKey(mx.group(0))
-		return "%s (%s/%s): %s" % (mx.group(0), i.raw.reporter, i.statusName(), i.raw.summary)
+		return "%s (%s/%s): %s" % (colored(mx.group(0), 'white'), colored(i.raw.reporter, 'green'), colored(i.statusName(), 'cyan'), i.raw.summary)
 	except jiraError.IssueNotFound:
 		return "%s: Issue not found." % mx.group(0)
 
