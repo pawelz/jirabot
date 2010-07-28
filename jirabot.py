@@ -14,8 +14,7 @@ import os
 import sys
 import suds
 import time
-import termcolor
-termcolor.RESET='\017'
+import irccolor as color
 
 from pyjira import soap
 from pyjira import jira
@@ -43,7 +42,7 @@ def cmd_summary(mx):
 	ekg.echo("Issue: "+mx.group(0))
 	try:
 		i = r.getIssueByKey(mx.group(0))
-		return "%s (%s/%s): %s" % (termcolor.colored(mx.group(0), 'white', attrs=['bold']), termcolor.colored(i.raw.reporter, 'green'), termcolor.colored(i.statusName(), 'green', attrs=['bold']), i.raw.summary)
+		return "%s (%s/%s): %s" % (color.colored(mx.group(0), attrs=['bold']), color.colored(i.raw.reporter, 'green'), color.colored(i.statusName(), 'green', attrs=['bold']), i.raw.summary)
 	except jiraError.IssueNotFound:
 		return "%s: Issue not found." % mx.group(0)
 
