@@ -71,7 +71,13 @@ def messageHandler(session, uid, type, text, stime, ignore_level):
 			ekg.command(("/msg %s %s" % (uid, command[c][1](mx))).encode('UTF8'))
 			break
 
+def testMessageHandler(session, uid, type, text, stime, ignore_level):
+	if text[-21:-4] == "!jirabot selftest":
+		for i in color.test():
+			ekg.command("/msg %s TEST [%s]" % (uid, i))
+
 ekg.handler_bind("protocol-message-received", messageHandler)
+ekg.handler_bind("protocol-message-received", testMessageHandler)
 ekg.timer_bind(5, handleSignals)
 
 ekg.variable_add("jirabot:url", "")
