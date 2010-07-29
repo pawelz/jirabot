@@ -24,21 +24,14 @@ import os
 __ALL__ = [ 'colored' ]
 
 
-ATTRIBUTES = dict(
-        zip([
-            'bold',
-            'dark',
-            '',
-            'underline',
-            'blink',
-            '',
-            'reverse',
-            'concealed'
-            ],
-            range(1, 9)
-            )
-        )
-del ATTRIBUTES['']
+ATTRIBUTES = {
+            'bold': 002,
+            'dark': None,
+            'underline': 037,
+            'blink': 006,
+            'reverse': 026,
+            'concealed': None,
+       }
 
 
 HIGHLIGHTS = dict(
@@ -53,7 +46,7 @@ HIGHLIGHTS = dict(
             'on_yellow',
             '',
             '',
-            'on_cyan'
+            'on_cyan',
             '',
             '',
             '',
@@ -77,7 +70,7 @@ COLORS = dict(
             'yellow',
             '',
             '',
-            'cyan'
+            'cyan',
             '',
             '',
             '',
@@ -109,11 +102,10 @@ def colored(text, color=None, on_color=None, attrs=None):
         colored('Hello, World!', 'green')
     """
     if os.getenv('MIRC_COLORS_DISABLED') is None:
-        fmt_str = '\033[%dm%s'
         if attrs is not None:
             for attr in attrs:
-                if attr == 'bold':
-                    text = '\002' + text
+                if ATTRIBUTES[attr] is not None:
+                    text = '%c%s' % (ATTRIBUTES[attr], text)
 
         if color is not None:
             if on_color is not None:
@@ -122,7 +114,7 @@ def colored(text, color=None, on_color=None, attrs=None):
                 text = '\003%.2d%s' % (COLORS[color], text)
         else:
             if on_color is not None:
-                text = '\00301,%.2d%s' % (HIGHLIGHTS[on_color], text)
+                text = '\00314,%.2d%s' % (HIGHLIGHTS[on_color], text)
 
         text += RESET
     return text
