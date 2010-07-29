@@ -127,46 +127,43 @@ def colored(text, color=None, on_color=None, attrs=None):
         text += RESET
     return text
 
+def test():
+    test=[[
+        colored('Grey color', 'grey'),
+        colored('Red color', 'red'),
+        colored('Green color', 'green'),
+        colored('Yellow color', 'yellow'),
+        colored('Blue color', 'blue'),
+        colored('Magenta color', 'magenta'),
+        colored('Cyan color', 'cyan'),
+        colored('White color', 'white')
+    ]]
 
-if __name__ == '__main__':
-    print 'Current terminal type: ', os.getenv('TERM')
-    print 'Test basic colors:'
-    print colored('Grey color', 'grey')
-    print colored('Red color', 'red')
-    print colored('Green color', 'green')
-    print colored('Yellow color', 'yellow')
-    print colored('Blue color', 'blue')
-    print colored('Magenta color', 'magenta')
-    print colored('Cyan color', 'cyan')
-    print colored('White color', 'white')
-    print '-' * 78
+    test+=[[
+        colored('On grey color', on_color='on_grey'),
+        colored('On red color', on_color='on_red'),
+        colored('On green color', on_color='on_green'),
+        colored('On yellow color', on_color='on_yellow'),
+        colored('On blue color', on_color='on_blue'),
+        colored('On magenta color', on_color='on_magenta'),
+        colored('On cyan color', on_color='on_cyan'),
+        colored('On white color', color='grey', on_color='on_white')
+    ]]
 
-    print 'Test highlights:'
-    print colored('On grey color', on_color='on_grey')
-    print colored('On red color', on_color='on_red')
-    print colored('On green color', on_color='on_green')
-    print colored('On yellow color', on_color='on_yellow')
-    print colored('On blue color', on_color='on_blue')
-    print colored('On magenta color', on_color='on_magenta')
-    print colored('On cyan color', on_color='on_cyan')
-    print colored('On white color', color='grey', on_color='on_white')
-    print '-' * 78
+    test+=[[
+        colored('Bold grey color', 'grey', attrs=['bold']),
+        colored('Dark red color', 'red', attrs=['dark']),
+        colored('Underline green color', 'green', attrs=['underline']),
+        colored('Blink yellow color', 'yellow', attrs=['blink']),
+        colored('Reversed blue color', 'blue', attrs=['reverse']),
+        colored('Concealed Magenta color', 'magenta', attrs=['concealed']),
+        colored('Bold underline reverse cyan color', 'cyan', attrs=['bold', 'underline', 'reverse']),
+        colored('Dark blink concealed white color', 'white', attrs=['dark', 'blink', 'concealed'])
+    ]]
 
-    print 'Test attributes:'
-    print colored('Bold grey color', 'grey', attrs=['bold'])
-    print colored('Dark red color', 'red', attrs=['dark'])
-    print colored('Underline green color', 'green', attrs=['underline'])
-    print colored('Blink yellow color', 'yellow', attrs=['blink'])
-    print colored('Reversed blue color', 'blue', attrs=['reverse'])
-    print colored('Concealed Magenta color', 'magenta', attrs=['concealed'])
-    print colored('Bold underline reverse cyan color', 'cyan',
-            attrs=['bold', 'underline', 'reverse'])
-    print colored('Dark blink concealed white color', 'white',
-            attrs=['dark', 'blink', 'concealed'])
-    print '-' * 78
+    test+=[[
+        colored('Underline red on grey color', 'red', 'on_grey', ['underline']),
+        colored('Reversed green on red color', 'green', 'on_red', ['reverse'])
+    ]]
 
-    print 'Test mixing:'
-    print colored('Underline red on grey color', 'red', 'on_grey',
-            ['underline'])
-    print colored('Reversed green on red color', 'green', 'on_red', ['reverse'])
-
+    return [' '.join(x) for x in test]
