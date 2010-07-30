@@ -24,6 +24,7 @@ r = jira.Jira(ekg.config["jirabot:url"], ekg.config["jirabot:username"], ekg.con
 rp = r.getProject(ekg.config["jirabot:project"])
 
 command={}
+subjectrx=None
 
 def initialize(name, args):
 	command['summary'] = (re.compile("%s-[0-9]+" % ekg.config["jirabot:projectregexp"]), cmd_summary)
@@ -53,14 +54,27 @@ def cmd_list(mx):
 def handleSignals():
 	dir=ekg.config["jirabot:sigdir"]
 	dirList=os.listdir(dir)
+	# TODO: move this to "global" scope. It makes no sense to compile it on
+	# every message.
+	subjectrx = re.compile("^  ([^:]+): .(%s-[0-9]+)" % ekg.config["jirabot:projectregexp"])
 	for fname in dirList:
 		file = open("%s/%s" % (dir, fname), "r")
-		cmd = file.readline()
-		for c in command:
-			mx = command[c][0].search(cmd)
-			if (mx):
-				ekg.command(("/msg %s %s" % (ekg.config["jirabot:channel"], command[c][1](mx))).encode('UTF8'))
-				break
+		subject = file.readline()
+
+		# Extract some information (action, issue key) from mail Subject
+		mx = subjectrx.match(subject)
+
+		if mx:
+			# a for action, i for issue
+			a = mx.group(1)
+			i = r.getIssueByKey(mx.group(2))
+			ekg.command("/msg %s %s %s (%s/%s): %s" %
+					(ekg.config["jirabot:channel"],
+						color.colored(mx.group(2), attrs=['bold']),
+						a,
+						color.colored(i.raw.reporter, 'green'),
+						color.colored(i.statusName(), 'green', attrs=['bold']),
+						i.raw.summary))
 		file.close()
 		os.unlink("%s/%s" % (dir, fname))
 
