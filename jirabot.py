@@ -68,6 +68,8 @@ def handleSignals():
 			# a for action, i for issue
 			a = mx.group(1)
 			i = r.getIssueByKey(mx.group(2))
+			if a == "Commented":
+				a += " by %s" % i._comments[-1:][0].author
 			ekg.command("/msg %s %s %s (%s/%s): %s" %
 					(ekg.config["jirabot:channel"],
 						color.colored(mx.group(2), attrs=['bold']),
