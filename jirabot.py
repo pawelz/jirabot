@@ -56,6 +56,9 @@ def handleSignals():
 	dirList=os.listdir(dir)
 	# TODO: move this to "global" scope. It makes no sense to compile it on
 	# every message.
+	# NOTE: it assumes that prefix added by JIRA is ' ' (single space).
+	# Default prefix is '[JIRA]'. Adjust it to your JIRA configuration.
+	# TODO: declare ekg2 config variable for prefix.
 	subjectrx = re.compile("^  ([^:]+): .(%s-[0-9]+)" % ekg.config["jirabot:projectregexp"])
 	for fname in dirList:
 		file = open("%s/%s" % (dir, fname), "r")
