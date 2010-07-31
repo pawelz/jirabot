@@ -24,12 +24,12 @@ I assume that you already have working JIRA installation. It must be
 accessible without http authentication. (I mean http_auth is not supported.
 JIRA level authentication is fully supported).
 
-* Create account for jira bot,
+* Create an account for jira bot,
 * grant it read access to some projects,
 * enable JIRA remote API (see http://confluence.atlassian.com/x/8dcB for
   details).
 
-Note: you need to create JIRA account even if JIRA content is readable
+Note: you need to create a JIRA account even if JIRA content is readable
 anonymously, because JIRA does not support anonymous SOAP access. See
 http://jira.atlassian.com/browse/JRA-20549
 
