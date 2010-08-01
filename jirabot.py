@@ -72,11 +72,12 @@ def handleSignals():
 			a = mx.group(1)
 			i = r.getIssueByKey(mx.group(2))
 			# find last comment
-			latest=max(i._comments, key=lambda x: x.updated)
-			if a == "Commented":
-				a += " by %s" % latest.updateAuthor
-			if a == "Issue Comment Edited":
-				a = "%s edited %%s's comment" % latest.updateAuthor % latest.author
+			if i._comments:
+				latest=max(i._comments, key=lambda x: x.updated)
+				if a == "Commented":
+					a += " by %s" % latest.updateAuthor
+				if a == "Issue Comment Edited":
+					a = "%s edited %%s's comment" % latest.updateAuthor % latest.author
 			ekg.command("/msg %s %s %s (%s/%s): %s" %
 					(ekg.config["jirabot:channel"],
 						color.colored(mx.group(2), attrs=['bold']),
