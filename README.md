@@ -118,7 +118,7 @@ Commands
 
 * `/jirabot:print_config`: print configuration variables
 * `/jirabot:signal ARG`: trigger signal. Should be equivalent to:
-  `echo ARG > sigdir/file`. May be useful in conjuction with ekg2 rc
+  `echo ARG > sigdir/file`. May be useful in conjunction with ekg2 rc
   plugin.
 
 Author, License
